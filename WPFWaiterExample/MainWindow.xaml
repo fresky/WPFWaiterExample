@@ -1,0 +1,104 @@
+﻿<Window x:Class="WPFWaiterExample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WPF Waiter" Height="371" Width="710">
+
+
+    <Window.Resources>
+        <!-- Style for AJAX-like wait spinners -->
+        <Style x:Key="WaitSpinnerStyle" TargetType="Control">
+            <Setter Property="Foreground" Value="#888" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Control">
+                        <Viewbox Visibility="{TemplateBinding Visibility}">
+                            <Canvas RenderTransformOrigin="0.5,0.5" Width="120" Height="120" >
+                                <Ellipse Width="21.835" Height="21.862" Canvas.Left="20.1696" Canvas.Top="9.76358" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="1.0"/>
+                                <Ellipse Width="20.835" Height="20.862" Canvas.Left="2.86816" Canvas.Top="29.9581" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="0.9"/>
+                                <Ellipse Width="19.835" Height="19.862" Canvas.Left="0.00001" Canvas.Top="57.9341" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="0.8"/>
+                                <Ellipse Width="17.835" Height="17.862" Canvas.Left="12.1203" Canvas.Top="83.3163" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="0.7"/>
+                                <Ellipse Width="16.835" Height="16.862" Canvas.Left="36.5459" Canvas.Top="98.1380" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="0.6"/>
+                                <Ellipse Width="14.835" Height="14.862" Canvas.Left="64.6723" Canvas.Top="96.8411" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="0.5"/>
+                                <Ellipse Width="13.835" Height="13.862" Canvas.Left="87.6176" Canvas.Top="81.2783" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="0.4"/>
+                                <Ellipse Width="12.835" Height="12.862" Canvas.Left="98.165"  Canvas.Top="54.4140" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="0.3"/>
+                                <Ellipse Width="11.835" Height="11.862" Canvas.Left="92.9838" Canvas.Top="26.9938" Stretch="Fill" Fill="{TemplateBinding Foreground}" Opacity="0.2"/>
+                                <Canvas.RenderTransform>
+                                    <RotateTransform x:Name="SpinnerRotate" Angle="0" />
+                                </Canvas.RenderTransform>
+                                <Canvas.Triggers>
+                                    <EventTrigger RoutedEvent="ContentControl.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                            Storyboard.TargetName="SpinnerRotate"
+                                            Storyboard.TargetProperty="Angle"
+                                            From="0" To="360" Duration="0:0:01.3"
+                                            RepeatBehavior="Forever" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Canvas.Triggers>
+                            </Canvas>
+                        </Viewbox>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+
+
+        <!--Sync-->
+        <Label Content="Sync:" HorizontalAlignment="Left" Margin="16,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Button Name="Sync_Start" Content="Start" Click="Sync_Start_Click" HorizontalAlignment="Left" Margin="11,41,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="Sync_Canel" Content="Cancel" Click="Sync_Cancel_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="133,41,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="Elapse Time:" HorizontalAlignment="Left" Margin="11,76,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.158,0.462"/>
+        <TextBox x:Name="Sync_ElaspeTimeTextBox" HorizontalAlignment="Left" Height="23" Margin="102,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49"/>
+        <Control x:Name="Sync_SpinControl" Width="30" Style="{StaticResource WaitSpinnerStyle}" Foreground="Red" RenderTransformOrigin="-12.733,0.488" Margin="254,49,419,197"  />
+        <ProgressBar x:Name="Sync_Progressbar" Minimum="0" Maximum="100" HorizontalAlignment="Left" Height="21" Margin="10,114,0,0" VerticalAlignment="Top" Width="198"/>
+
+
+        <!--Async-->
+        <Label Content="Async:" HorizontalAlignment="Left" Margin="383,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Button Name="Await_Start" Content="Start" Click="Await_Start_Click" HorizontalAlignment="Left" Margin="383,43,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="Await_Cancel" Content="Cancel" Click="Await_Cancel_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="509,43,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="Elapse Time:" HorizontalAlignment="Left" Margin="383,76,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.158,0.462"/>
+        <TextBox Name="Await_ElaspeTimeTextBox" HorizontalAlignment="Left" Height="23" Margin="463,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49"/>
+        <Control Name="Await_SpinControl" Width="30"  Style="{StaticResource WaitSpinnerStyle}" Foreground="Green" RenderTransformOrigin="-12.733,0.488" Margin="613,43,48,206"  />
+        <ProgressBar Name="Await_Progressbar" Maximum="100" Minimum="0" HorizontalAlignment="Left" Height="21" Margin="383,114,0,0" VerticalAlignment="Top" Width="198"/>
+
+
+        <!--Parallel Data Binding-->
+        <Label Content="Parallel with Data Binding:" HorizontalAlignment="Left" Margin="386,170,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Button Content="Start" Click="DataBinding_Start_Click" IsEnabled="{Binding StartButtonEnabled, Mode=OneWay}" HorizontalAlignment="Left" Margin="386,211,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Cancel" Click="DataBinding_Cancel_Click" IsEnabled="{Binding CancelButtonEnabled, Mode=OneWay}" HorizontalAlignment="Left" Margin="525,211,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="Elapse Time:" HorizontalAlignment="Left" Margin="393,250,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.158,0.462"/>
+        <TextBox Text="{Binding ElapseTime}" HorizontalAlignment="Left" Height="23" Margin="473,253,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49"/>
+        <Control Visibility="{Binding SpinVisibility}" Width="30"  Style="{StaticResource WaitSpinnerStyle}" Foreground="Green" RenderTransformOrigin="-12.733,0.488" Margin="613,214,48,35"  />
+        <ProgressBar Maximum="100" Minimum="0" Value="{Binding FinishedJob, Mode=OneWay}" HorizontalAlignment="Left" Height="21" Margin="386,296,0,0" VerticalAlignment="Top" Width="198"/>
+
+
+        <!--Parallel-->
+        <Label Content="Parallel:" HorizontalAlignment="Left" Margin="16,170,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Button Name="CodeBehind_Start" Content="Start" Click="CodeBehind_Start_Click" HorizontalAlignment="Left" Margin="16,211,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="CodeBehind_Cancel" Content="Cancel" Click="CodeBehind_Cancel_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="133,211,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="Elapse Time:" HorizontalAlignment="Left" Margin="11,250,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.158,0.462"/>
+        <TextBox Name="CodeBehind_ElaspeTimeTextBox" HorizontalAlignment="Left" Height="23" Margin="102,253,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49"/>
+        <Control Name="CodeBehind_SpinControl" Width="30" Style="{StaticResource WaitSpinnerStyle}" Foreground="Red" RenderTransformOrigin="-12.733,0.488" Margin="263,211,403,35"  />
+        <ProgressBar Name="CodeBehind_Progressbar" Minimum="0" Maximum="100" HorizontalAlignment="Left" Height="21" Margin="10,296,0,0" VerticalAlignment="Top" Width="198"/>
+
+
+        <Separator HorizontalAlignment="Left" Height="16" Margin="0,149,0,0" VerticalAlignment="Top" Width="702" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
+        <Separator HorizontalAlignment="Left" Height="27" Margin="166,155,0,0" VerticalAlignment="Top" Width="337" RenderTransformOrigin="0.5,0.5">
+            <Separator.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="89.443"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Separator.RenderTransform>
+        </Separator>
+    </Grid>
+</Window>
